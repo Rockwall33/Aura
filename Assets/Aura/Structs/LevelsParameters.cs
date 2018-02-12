@@ -1,0 +1,93 @@
+﻿///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///                                                                                                                                                             ///
+///     MIT License                                                                                                                                             ///
+///                                                                                                                                                             ///
+///     Copyright (c) 2016 Raphaël Ernaelsten (@RaphErnaelsten)                                                                                                 ///
+///                                                                                                                                                             ///
+///     Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),      ///
+///     to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute,                  ///
+///     and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:              ///
+///                                                                                                                                                             ///
+///     The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.                          ///
+///                                                                                                                                                             ///
+///     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     ///
+///     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      ///
+///     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS    ///
+///     IN THE SOFTWARE.                                                                                                                                        ///
+///                                                                                                                                                             ///
+///     PLEASE CONSIDER CREDITING AURA IN YOUR PROJECTS. IF RELEVANT, USE THE UNMODIFIED LOGO PROVIDED IN THE "LICENSE" FOLDER.                                 ///
+///                                                                                                                                                             ///
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+using System;
+
+namespace AuraAPI
+{
+    /// <summary>
+    /// Collection of parameters for Levels adjustement. Similar to the same tool in Photoshop.
+    /// </summary>
+    [Serializable]
+    public struct LevelsParameters
+    {
+        #region Public Members
+        /// <summary>
+        /// Offsets the bottom values (similar to Levels in Photoshop)
+        /// </summary>
+        public float levelLowThreshold;
+        /// <summary>
+        /// Offsets the top values (similar to Levels in Photoshop)
+        /// </summary>
+        public float levelHiThreshold;
+        /// <summary>
+        /// Output value of the bottom threshold (similar to Levels in Photoshop, except that it is unclamped here)
+        /// </summary>
+        public float outputLowValue;
+        /// <summary>
+        /// Output value of the top threshold (similar to Levels in Photoshop, except that it is unclamped here)
+        /// </summary>
+        public float outputHiValue;
+        /// <summary>
+        /// Contrast intensity
+        /// </summary>
+        public float contrast;
+        #endregion
+
+        #region Private Members
+        /// <summary>
+        /// Packed data to be sent to the compute shader
+        /// </summary>
+        private VolumeLevelsData _packedData;
+        #endregion
+
+        #region Functions
+        /// <summary>
+        /// Set default values
+        /// </summary>
+        public void SetDefaultValues()
+        {
+            levelLowThreshold = 0;
+            levelHiThreshold = 1;
+            outputLowValue = 0;
+            outputHiValue = 1;
+            contrast = 1;
+        }
+
+        /// <summary>
+        /// Packs the data and returns them
+        /// </summary>
+        public VolumeLevelsData Data
+        {
+            get
+            {
+                _packedData.levelLowThreshold = levelLowThreshold;
+                _packedData.levelHiThreshold = levelHiThreshold;
+                _packedData.outputLowValue = outputLowValue;
+                _packedData.outputHiValue = outputHiValue;
+                _packedData.contrast = contrast;
+
+                return _packedData;
+            }
+        }
+        #endregion
+    }
+}
